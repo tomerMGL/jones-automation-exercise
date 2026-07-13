@@ -1,6 +1,6 @@
 import { BasePage } from "./BasePage";
 import { Locator, Page } from "@playwright/test";
-
+import { validDefaults } from "../data/landing-page.data";
 export class LandingPage extends BasePage {
   readonly nameInput: Locator;
   readonly emailInput: Locator;
@@ -19,7 +19,21 @@ export class LandingPage extends BasePage {
     this.companyInput = page.locator("#company");
     this.websiteInput = page.locator("#website");
     this.employeesSelect = page.locator("#employees");
-    this.submitButton = page.getByRole('button', { name: 'Request a call back' });
+    this.submitButton = page.getByRole("button", {
+      name: "Request a call back",
+    });
   }
 
+  async fillForm(data: typeof validDefaults) {
+    await this.nameInput.fill(data.name);
+    await this.emailInput.fill(data.email);
+    await this.phoneInput.fill(data.phone);
+    await this.companyInput.fill(data.company || "");
+    await this.websiteInput.fill(data.website || "");
+    await this.employeesSelect.selectOption(data.employees);
+  }
+
+  async submit() {
+    await this.submitButton.click();
+  }
 }
